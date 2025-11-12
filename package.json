@@ -1,0 +1,21 @@
+{
+  "name": "advanced",
+  "version": "1.0.0",
+  "description": "Yii 2 Advanced Project Template",
+  "main": "index.js",
+  "scripts": {
+    "build:frontend": "npx tailwindcss -i ./frontend/web/css/input.css -o ./frontend/web/css/output.css --minify",
+    "build:backend": "npx tailwindcss -i ./backend/web/css/input.css -o ./backend/web/css/output.css --minify",
+    "watch:frontend": "npx tailwindcss -i ./frontend/web/css/input.css -o ./frontend/web/css/output.css --watch",
+    "watch:backend": "npx tailwindcss -i ./backend/web/css/input.css -o ./backend/web/css/output.css --watch",
+    "build:all": "npm run build:frontend && npm run build:backend"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "autoprefixer": "^10.4.21",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^3.4.18"
+  }
+}
