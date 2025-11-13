@@ -70,7 +70,11 @@ class RestaranController extends Controller
                 $wishlists = json_decode($requestCookies->getValue('product'), true);
             }
         }else{
-            $wishlists = WishlistsModel::find()->where(['user_id' => Yii::$app->user->id])-> indexBy('product_id')->asArray()->all();
+            $wishlists = WishlistsModel::find()
+                ->where(['user_id' => Yii::$app->user->id])
+                ->indexBy('product_id')
+                ->asArray()
+                ->all();
         }
 
 
@@ -82,9 +86,13 @@ class RestaranController extends Controller
         }
 
         $products = CategoriesModel::find()
-            ->joinWith('products.productTags.tags' )
-            ->joinWith('products.prodcutDetails' )
-            ->where(['products.restaurant_id' => $id])
+            ->joinWith([
+                'products' => function($query) use ($id) {
+                    $query->where(['products.restaurant_id' => $id]);
+                },
+            ])
+            ->joinWith('products.productTags.tags')
+            ->joinWith('products.prodcutDetails')
             ->asArray()
             ->all();
 

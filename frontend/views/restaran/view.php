@@ -158,11 +158,12 @@
                                                     <?= ( $product['price'] ? number_format($product['price'], 0, '.', ' ') : "" )  ?> UZS</span>
                                             </p>
 
-                                            <?php if (!empty($product['tags'])): ?>
+                                            <?php if (!empty($product['productTags'])): ?>
                                                 <div class="mb-2">
-                                                    <?php foreach ($product['tags'] as $tag): ?>
+                                                    <?php foreach ($product['productTags'] as $tag): ?>
+
                                                         <span class="inline-block bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full mr-1 mb-1 capitalize">
-                                                            <?= htmlspecialchars($tag['tag_name']) ?>
+                                                            <?= htmlspecialchars($tag['tags']['name']) ?>
                                                         </span>
                                                     <?php endforeach; ?>
                                                 </div>

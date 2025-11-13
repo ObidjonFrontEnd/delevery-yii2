@@ -221,17 +221,17 @@ class OwnerController extends Controller
 
         $restaurantList = ArrayHelper::map($restaurants, 'id', 'title');
 
-        // Обработка POST запроса
+
         if (Yii::$app->request->isPost) {
             $transaction = Yii::$app->db->beginTransaction();
 
             try {
-                // Загружаем данные в модель продукта
+
                 $productModel->load(Yii::$app->request->post());
 
                 if ($productModel->validate() && $productModel->save()) {
 
-                    // Обновляем детали продукта
+
                     $productDetailsModel->load(Yii::$app->request->post());
                     $productDetailsModel->product_id = $productModel->id;
 
@@ -288,7 +288,7 @@ class OwnerController extends Controller
             throw new \yii\web\NotFoundHttpException('Mahsulot topilmadi');
         }
         if($productModel->delete()){
-            return $this->redirect(['restarans/view' , 'id' => $restaurantId]);
+            return $this->redirect(['restaran/view' , 'id' => $restaurantId]);
         }
 
     }

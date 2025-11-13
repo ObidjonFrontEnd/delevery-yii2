@@ -54,9 +54,14 @@ return [
                 'login' => 'auth/login',
                 'signup' => 'auth/signup',
                 'logout' => 'auth/logout',
+
+                'order/status/<status:\w+>/sort/<sort:[\w\-]+>' => 'order/index',
+                'order/status/<status:\w+>' => 'order/index',
+                'order/sort/<sort:[\w\-]+>' => 'order/index',
+
                 '<controller>/page/<page:\d+>' => '<controller>/index',
-                '<controller>/category/<category:\d+>' => '<controller>/index',
-                '<controller>/category/<category:\d+>/page/<page:\d+>' => '<controller>/index',
+                'restaran/category/<category:\d+>' => 'restaran/index',
+                'restaran/category/<category:\d+>/page/<page:\d+>' => 'restaran/index',
                 '<controller>/<id:\d+>' => '<controller>/view',
                 '<controller>' => '<controller>/index',
             ],

@@ -166,22 +166,20 @@ use yii\helpers\Html;
                     <i class='bxr  bx-cart'  ></i>
                 </div>
                 <div tabindex="-1" class="dropdown-content rounded-lg menu bg-white
-                    dark:text-white dark:bg-[#1f1f1f] flex flex-row max-h-[500px] p-[10px]  z-1 w-[350px]  shadow-sm overflow-y-scroll">
-
-
+                    dark:text-white dark:bg-[#1f1f1f] max-h-[500px] p-[10px]  z-1 w-[350px]  shadow-sm overflow-y-auto">
+                        <div class="">
                             <?=(
                             \frontend\widgets\WishlistWidget::widget([
                                     'arr' => $result,
                             ])
                             )?>
-
-
+                        </div>
                 </div>
 
             </div>
 
             <?php if($userId === null || $userRole === 'guest'):?>
-                <?= Html::a('Kirish', ['auth/signup'], [
+                <?= Html::a('Kirish', ['auth/login'], [
                         'class' => 'dark:text-[#191918] dark:bg-[#FCE000] dark:border-gray-600
                          px-[20px] py-[10px] rounded-lg border border-gray-400
                          bg-white text-gray-800 font-medium

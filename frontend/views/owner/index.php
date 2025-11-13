@@ -9,7 +9,7 @@
             <?php foreach ($restarans as $items): ?>
 
                 <div class="card bg-base-100 dark:bg-[#2c2c2c] shadow-sm block relative">
-                    <a href="<?= \yii\helpers\Url::to(['restarans/view', 'id' => $items->id]) ?>" class="block">
+                    <a href="<?= \yii\helpers\Url::to(['restaran/view', 'id' => $items->id]) ?>" class="block">
                         <figure class="relative">
                             <img src="<?= Yii::getAlias('@web') ?>/image/<?= $items->image ?? '' ?>" alt="Default">
                         </figure>
