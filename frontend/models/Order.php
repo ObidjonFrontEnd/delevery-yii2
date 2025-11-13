@@ -83,7 +83,7 @@ class Order extends \yii\db\ActiveRecord
      */
     public function getAddress()
     {
-        return $this->hasOne(Address::class, ['id' => 'address_id']);
+        return $this->hasOne(AddressesModel::class, ['id' => 'address_id']);
     }
 
     /**
@@ -103,7 +103,7 @@ class Order extends \yii\db\ActiveRecord
      */
     public function getOrderDetails()
     {
-        return $this->hasMany(OrderDetail::class, ['order_id' => 'id']);
+        return $this->hasMany(OrderDetails::class, ['order_id' => 'id']);
     }
 
     /**
@@ -113,7 +113,7 @@ class Order extends \yii\db\ActiveRecord
      */
     public function getRestaurant()
     {
-        return $this->hasOne(Restaurant::class, ['id' => 'restaurant_id']);
+        return $this->hasOne(RestauransModel::class, ['id' => 'restaurant_id']);
     }
 
     /**
@@ -123,7 +123,7 @@ class Order extends \yii\db\ActiveRecord
      */
     public function getUser()
     {
-        return $this->hasOne(User::class, ['id' => 'user_id']);
+        return $this->hasOne(UsersModel::class, ['id' => 'user_id']);
     }
 
 }

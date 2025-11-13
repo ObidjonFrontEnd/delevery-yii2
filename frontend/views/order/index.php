@@ -4,6 +4,7 @@
 /** @var yii\data\Sort $sort */
 use yii\widgets\LinkPager;
 use yii\helpers\Url;
+
 ?>
 
 <section class="">
@@ -71,7 +72,7 @@ use yii\helpers\Url;
 
     <!-- Список заказов -->
     <?php if(isset($orders) && !empty($orders)): ?>
-        <div class="space-y-[20px]">
+        <div class="grid md:grid-cols-2 sm:grid-cols-2 grid-cols-1 lg:grid-cols-3 gap-[20px]">
             <?php foreach ($orders as $order): ?>
                 <div class="bg-white dark:bg-[#2c2c2c] rounded-lg shadow-sm overflow-hidden">
                     <!-- Заголовок заказа -->
@@ -93,7 +94,7 @@ use yii\helpers\Url;
 
                             <div>
                                 <p class="text-sm text-gray-500 dark:text-gray-400">Jami</p>
-                                <p class="font-bold text-yellow-500"><?= number_format($order->total, 0, '.', ' ') ?> сум</p>
+                                <p class="font-bold text-yellow-500"><?= number_format($order->total, 0, '.', ' ') ?> so'm</p>
                             </div>
                         </div>
 
@@ -144,7 +145,7 @@ use yii\helpers\Url;
 
                     <!-- Детали заказа -->
                     <div class="px-[20px] py-[15px]">
-                        <div class="grid lg:grid-cols-3 grid-cols-1 gap-[15px]">
+                        <div class="grid lg:grid-cols-2 grid-cols-1 gap-[15px]">
                             <!-- Ресторан -->
                             <?php if(isset($order->restaurant)): ?>
                                 <div class="flex items-start gap-[10px]">
@@ -162,7 +163,10 @@ use yii\helpers\Url;
                                     <i class='bx bx-user text-[24px] text-gray-400'></i>
                                     <div>
                                         <p class="text-sm text-gray-500 dark:text-gray-400">Kurer</p>
-                                        <p class="font-medium"><?= $order->courier->name ?? 'Belgilanmagan' ?></p>
+                                        <p class="font-medium">
+                                            <?= $order->courier->first_name ?? 'Belgilanmagan' ?>
+                                            <?= $order->courier->last_name ?? '' ?>
+                                        </p>
                                     </div>
                                 </div>
                             <?php endif; ?>
@@ -173,18 +177,18 @@ use yii\helpers\Url;
                                     <i class='bx bx-map text-[24px] text-gray-400'></i>
                                     <div>
                                         <p class="text-sm text-gray-500 dark:text-gray-400">Yetkazib berish manzili</p>
-                                        <p class="font-medium"><?= $order->address->full_address ?? 'Ko‘rsatilmagan' ?></p>
+                                        <p class="font-medium"><?= $order->address->name ?? 'Ko‘rsatilmagan' ?></p>
                                     </div>
                                 </div>
                             <?php endif; ?>
                         </div>
 
                         <!-- Товары -->
-                        <?php if(isset($order->orderItems) && !empty($order->orderItems)): ?>
+                        <?php if(isset($order->orderDetails) && !empty($order->orderDetails)): ?>
                             <div class="mt-[15px] pt-[15px] border-t border-gray-200 dark:border-gray-700">
                                 <p class="text-sm font-semibold mb-[10px] text-gray-700 dark:text-gray-300">Mahsulotlar:</p>
                                 <div class="space-y-[8px]">
-                                    <?php foreach($order->orderItems as $item): ?>
+                                    <?php foreach($order->orderDetails as $item): ?>
                                         <div class="flex items-center justify-between">
                                             <div class="flex items-center gap-[10px]">
                                         <span class="text-sm text-gray-600 dark:text-gray-400">
@@ -200,13 +204,13 @@ use yii\helpers\Url;
 
                         <!-- Кнопки действий -->
                         <div class="mt-[15px] flex items-center gap-[10px] justify-end">
-                            <a href="<?= Url::to(['orders/view', 'id' => $order->id]) ?>"
+                            <a href="<?= Url::to(['order/view', 'id' => $order->id]) ?>"
                                class="px-4 py-2 bg-yellow-500 text-gray-900 font-semibold rounded-lg hover:bg-yellow-600 duration-300">
                                 Batafsil
                             </a>
 
                             <?php if($order->status === 'pending'): ?>
-                                <a href="<?= Url::to(['orders/cancel', 'id' => $order->id]) ?>"
+                                <a href="<?= Url::to(['order/cancel', 'id' => $order->id]) ?>"
                                    class="px-4 py-2 bg-red-500 text-white font-semibold rounded-lg hover:bg-red-600 duration-300"
                                    onclick="return confirm('Вы уверены, что хотите отменить заказ?')">
                                     Bekor qilish

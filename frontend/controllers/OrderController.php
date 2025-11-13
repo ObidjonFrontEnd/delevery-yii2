@@ -57,8 +57,8 @@ class OrderController extends Controller
 
 
         $query = Order::find()
-            ->where(['user_id' => Yii::$app->user->id])
-            ->with(['restaurant', 'courier', 'address', 'orderItems.product']);
+            ->where(['orders.user_id' => Yii::$app->user->id])
+            ->with(['restaurant', 'courier', 'address', 'orderDetails.product']);
 
         // Фильтрация по статусу (если передан)
         if ($status) {
@@ -68,7 +68,7 @@ class OrderController extends Controller
         $provider = new ActiveDataProvider([
             'query' => $query,
             'pagination' => [
-                'pageSize' => 8,
+                'pageSize' => 5,
                 'pageSizeParam' => false,
             ],
             'sort' => [
