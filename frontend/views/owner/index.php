@@ -1,6 +1,7 @@
 <?php
 /** @var \frontend\models\UsersModel $restarans */
 /** @var \frontend\controllers\RestaranController $pagination */
+$this->title = 'Restaranlarim';
 ?>
 <section class=" ">
 

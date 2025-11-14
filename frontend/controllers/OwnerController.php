@@ -14,6 +14,7 @@ use frontend\models\UsersModel;
 use Yii;
 use yii\data\Pagination;
 use yii\filters\AccessControl;
+use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 
@@ -21,17 +22,28 @@ class OwnerController extends Controller
 {
     public function behaviors()
     {
-        return [
-            'access' => [
-                'class' => AccessControl::class,
-                'rules' => [
-                    [
-                        'allow' => true,
-                        'roles' => ['@'],
+        return array_merge(
+            parent::behaviors(),
+            [
+                'verbs' => [
+                    'class' => VerbFilter::className(),
+                    'actions' => [
+                        'delete' => ['POST'],
                     ],
                 ],
-            ],
-        ];
+                'access' => [
+                    'class' => AccessControl::class,
+                    'only' => ['add', 'delete', 'edit', 'addProduct', 'index' , 'editProduct' , 'deleteProduct'],
+                    'rules' => [
+                        [
+                            'allow' => true,
+                            'roles' => ['@'],
+                        ],
+                    ],
+                ],
+
+            ]
+        );
     }
 
     public function actionIndex()

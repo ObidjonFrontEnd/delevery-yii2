@@ -212,7 +212,7 @@ use yii\helpers\Url;
                             <?php if($order->status === 'pending'): ?>
                                 <a href="<?= Url::to(['order/cancel', 'id' => $order->id]) ?>"
                                    class="px-4 py-2 bg-red-500 text-white font-semibold rounded-lg hover:bg-red-600 duration-300"
-                                   onclick="return confirm('Вы уверены, что хотите отменить заказ?')">
+                                   >
                                     Bekor qilish
                                 </a>
                             <?php endif; ?>

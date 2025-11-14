@@ -21,7 +21,7 @@ class CategoriesModel extends ActiveRecord
     }
 
     public function getProducts(){
-        return $this->hasMany(ProductsModel::class, ['category_id' => 'id']);
+        return $this->hasMany(ProductsModel::class, ['category_id' => 'id'])->alias('products');
     }
 
     public function getRestaurants(){

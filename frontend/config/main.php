@@ -59,10 +59,13 @@ return [
                 'order/status/<status:\w+>' => 'order/index',
                 'order/sort/<sort:[\w\-]+>' => 'order/index',
 
+                'order/create/<id:\d+>' => 'order/create',
+
                 '<controller>/page/<page:\d+>' => '<controller>/index',
                 'restaran/category/<category:\d+>' => 'restaran/index',
                 'restaran/category/<category:\d+>/page/<page:\d+>' => 'restaran/index',
                 '<controller>/<id:\d+>' => '<controller>/view',
+
                 '<controller>' => '<controller>/index',
             ],
         ],

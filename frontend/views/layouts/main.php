@@ -26,7 +26,7 @@ use yii\helpers\Html;
     $last_name = yii::$app->user->identity->last_name ?? null;
 
 
-
+    $result=[];
     if(yii::$app->user->isGuest){
 
         $cookies = Yii::$app->request->cookies;
@@ -210,6 +210,7 @@ use yii\helpers\Html;
                             <?= Html::a('Restaranlarim', ['owner/index'],[ 'class' => 'block px-4 py-2 text-gray-800 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700',])?>
                         <?php endif;?>
 
+                        <?= Html::a('Buyurtmalarim', ['order/index'],[ 'class' => 'block px-4 py-2 text-gray-800 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700',])?>
 
                         <?= Html::beginForm(['/auth/logout'], 'post') ?>
                             <?= Html::submitButton('Chiqish', [

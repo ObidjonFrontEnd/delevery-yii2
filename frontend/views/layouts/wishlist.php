@@ -48,11 +48,11 @@ use yii\helpers\Url;
     <div class="flex justify-between items-center">
         <a href="<?= Url::to(['/restaurant/view', 'id' => $model->product->restaurant_id]) ?>"
            class="bg-gray-800 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition">
-            В ресторан
+            restoranga
         </a>
-        <a href="<?= Url::to(['/cart/add', 'product_id' => $model->product_id]) ?>"
+        <a href="<?= Url::to(['/order/create', 'id' => $model->product_id]) ?>"
            class="bg-yellow-400 text-black px-4 py-2 rounded-lg font-semibold hover:bg-yellow-300 transition">
-            Оформить заказ
+            Buyurtmani rasmiylashtirish
         </a>
     </div>
 

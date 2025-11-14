@@ -17,7 +17,7 @@
 //    echo "<pre>";
 //    print_r($restauran);die();
 
-
+$this->title = 'Restaran';
 ?>
 
 <div class="container flex-col lg:flex-row  mx-auto p-4 flex gap-6">

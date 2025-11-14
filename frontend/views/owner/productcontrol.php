@@ -11,7 +11,7 @@
     /* @var $tags array */
     /** @var array $selectedTags */
     /** @var string $title */
-
+$this->title = 'product qoshish';
 ?>
 
 <div class="min-h-[80vh] py-10 flex items-center justify-center dark:bg-[#191918]">

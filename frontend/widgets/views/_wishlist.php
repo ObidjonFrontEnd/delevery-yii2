@@ -71,9 +71,9 @@ use yii\helpers\Url;
                class="flex-1 bg-[#2a2a2a] text-white px-6 py-[3px] flex items-center justify-center rounded-xl hover:bg-[#333] transition text-center font-medium">
                 Restoranga
             </a>
-            <a href="<?= Url::to(['/cart/add-from-wishlist', 'restaurant_id' => $restaurant['id'] ?? 0]) ?>"
+            <a href="<?= Url::to(['/order/create', 'id' => $restaurant['id'] ?? 0]) ?>"
                class="flex-1 bg-yellow-400 text-black px-6 py-[3px] flex items-center justify-center rounded-xl hover:bg-yellow-300 transition text-center font-semibold">
-                Buyurtma bering
+                Buyurtmani rasmiylashtirish
             </a>
         </div>
     </div>

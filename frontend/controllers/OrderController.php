@@ -117,9 +117,13 @@ class OrderController extends Controller
      */
     public function actionView($id)
     {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
+        $order = Order::find()
+            ->where(['id' => $id])
+            ->with(['restaurant', 'courier', 'address', 'orderDetails.product'])
+            ->one();
+
+
+        return $this->render('view', ['order' => $order]);
     }
 
     /**
@@ -127,21 +131,10 @@ class OrderController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return string|\yii\web\Response
      */
-    public function actionCreate()
+    public function actionCreate($id)
     {
-        $model = new Order();
 
-        if ($this->request->isPost) {
-            if ($model->load($this->request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
-            }
-        } else {
-            $model->loadDefaultValues();
-        }
-
-        return $this->render('create', [
-            'model' => $model,
-        ]);
+        return $this->render('create', []);
     }
 
     /**
@@ -185,12 +178,5 @@ class OrderController extends Controller
      * @return Order the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
-    protected function findModel($id)
-    {
-        if (($model = Order::findOne(['id' => $id])) !== null) {
-            return $model;
-        }
 
-        throw new NotFoundHttpException('The requested page does not exist.');
-    }
 }

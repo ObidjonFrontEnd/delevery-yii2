@@ -7,7 +7,7 @@ use yii\widgets\LinkPager;
 /** @var object $pagination */
 use yii\helpers\Url;
 /** @var int $category_id */
-
+$this->title = 'Restaranlar';
 ?>
 <section class=" ">
 
