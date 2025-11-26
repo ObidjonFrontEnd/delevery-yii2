@@ -2,10 +2,13 @@
 
 namespace frontend\models;
 
+use common\components\FileUploader;
 use yii\db\ActiveRecord;
+use yii\web\UploadedFile;
 
 class ProductsModel extends ActiveRecord
 {
+    public $imageFile;
     public static function tableName(){
         return 'products';
     }
@@ -17,8 +20,8 @@ class ProductsModel extends ActiveRecord
             [['price'], 'number'],
             [['name', 'image'], 'string', 'max' => 255],
             [['status'], 'string', 'max' => 255],
-            [[ 'image'] , 'string' ],
-            [['image'], 'default', 'value' => 'default.jpg'],
+            [['image'], 'string', 'max' => 255],
+            [['imageFile'], 'file', 'extensions' => 'png, jpg, jpeg, gif', 'maxSize' => 1024 * 1024 * 10],
         ];
     }
 
@@ -43,6 +46,38 @@ class ProductsModel extends ActiveRecord
     public function getProdcutDetails(){
         return $this->hasOne( ProductDetailModel::class , ['product_id' => 'id'] );
     }
+
+
+    public function uploadImage()
+    {
+        $this->imageFile = UploadedFile::getInstance($this, 'imageFile');
+
+        if ($this->imageFile) {
+            // Eski rasmni o'chirish
+            if ($this->image) {
+                FileUploader::delete($this->image, '');
+            }
+
+            // Yangi rasmni yuklash
+            $fileName = FileUploader::upload($this->imageFile, '');
+
+            if ($fileName) {
+                $this->image = $fileName;
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Rasm URL ini olish
+     */
+    public function getImageUrl()
+    {
+        return FileUploader::getUrl($this->image, '');
+    }
+
 
 
 }

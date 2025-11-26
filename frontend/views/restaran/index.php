@@ -1,5 +1,5 @@
 <?php
-/** @var \frontend\models\UsersModel $restarans */
+/** @var \frontend\models\UserModel $restarans */
 /** @var \frontend\models\CategoriesModel $categories */
 /** @var \frontend\models\CategoriesModel $categories2 */
 use yii\widgets\LinkPager;
@@ -65,29 +65,51 @@ $this->title = 'Restaranlar';
         <div class="grid lg:grid-cols-4 grid-cols-1 lg:grid-rows-2 gap-[20px] w-full">
             <?php foreach ($restarans as $items): ?>
 
-                <a href="<?= \yii\helpers\Url::to(['restaran/view', 'id' => $items->id]) ?>" class="card bg-base-100 dark:bg-[#2c2c2c] shadow-sm block">
-                    <figure class="relative">
-                        <img src="<?= Yii::getAlias('@web') ?>/image/<?= $items->image ?? '' ?>" alt="Default">
+                <a href="<?= \yii\helpers\Url::to(['restaran/view', 'id' => $items->id]) ?>"
+                   class="card bg-base-100 dark:bg-[#2c2c2c] shadow-sm block overflow-hidden">
+
+                    <figure class="relative w-full h-[200px] overflow-hidden bg-gray-200 dark:bg-gray-700">
+                        <?php if (!empty($items->image)): ?>
+                            <img src="<?= Yii::getAlias('@web') ?>/image/<?= $items->image ?>"
+                                 alt="<?= $items->title ?? '' ?>"
+                                 class="w-full h-full object-cover">
+                        <?php else: ?>
+                            <!-- Placeholder для отсутствующего изображения -->
+                            <div class="w-full h-full flex items-center justify-center bg-gray-300 dark:bg-gray-600">
+                                <i class="bx bx-restaurant text-6xl text-gray-400 dark:text-gray-500"></i>
+                            </div>
+                        <?php endif; ?>
                     </figure>
 
-                    <div class="w-full justify-between gap-[10px] flex py-[10px] px-[20px]">
-                        <h2 class="card-title text-[20px] font-semibold"><?= $items->title ?? '' ?></h2>
+                    <div class="w-full justify-between gap-[10px] flex py-[10px] px-[20px] min-h-[70px]">
+                        <h2 class="card-title text-[20px] font-semibold line-clamp-2 flex-1">
+                            <?= $items->title ?? 'Без названия' ?>
+                        </h2>
 
-                        <div class="text-[20px]">
+                        <div class="text-[20px] flex-shrink-0">
                             <?php
-                            $fullStars = floor($items->rate ?? 0);
-                            $halfStar = (($items->rate ?? 0) - $fullStars) >= 0.5;
-                            for ($i = 0; $i < $fullStars; $i++) echo "<i class='bxr bxs-star text-yellow-400'></i>";
-                            if ($halfStar) echo "<i class='bxr bxs-star-half text-yellow-400'></i>";
+                            $rate = $items->rate ?? 0;
+                            $fullStars = floor($rate);
+                            $halfStar = ($rate - $fullStars) >= 0.5;
+
+                            for ($i = 0; $i < $fullStars; $i++) {
+                                echo "<i class='bx bxs-star text-yellow-400'></i>";
+                            }
+
+                            if ($halfStar) {
+                                echo "<i class='bx bxs-star-half text-yellow-400'></i>";
+                            }
+
                             $emptyStars = 5 - $fullStars - ($halfStar ? 1 : 0);
-                            for ($i = 0; $i < $emptyStars; $i++) echo "<i class='bxr bx-star text-yellow-400'></i>";
+                            for ($i = 0; $i < $emptyStars; $i++) {
+                                echo "<i class='bx bx-star text-yellow-400'></i>";
+                            }
                             ?>
                         </div>
                     </div>
                 </a>
 
-
-            <?php endforeach;?>
+            <?php endforeach; ?>
         </div>
     <?php else: ?>
         <div class="else min-h-[80vh] flex flex-col items-center justify-center py-20 text-center text-gray-500 dark:text-gray-400 gap-4">

@@ -6,7 +6,7 @@ use yii\widgets\ActiveForm;
 /* @var $model frontend\models\RestauransModel */
 /* @var $addresses frontend\controllers\OwnerController  */
 
-$this->title = "Restoran tahrirlash";
+$this->title = "Restaranni tahrirlash";
 ?>
 
 <div class="min-h-[80vh] py-[10px] flex items-center justify-center dark:bg-[#191918]">
@@ -17,7 +17,7 @@ $this->title = "Restoran tahrirlash";
 
         <?php $form = ActiveForm::begin([
                 'id' => 'add-restaurant-form',
-                'options' => ['class' => 'space-y-4', 'enctype' => 'multipart/form-data'],
+                'options' => [ 'class' => 'space-y-4', 'enctype' => 'multipart/form-data'],
                 'fieldConfig' => [
                         'errorOptions' => ['class' => 'text-red-500 text-sm mt-1'],
                 ],
@@ -38,7 +38,7 @@ $this->title = "Restoran tahrirlash";
         ])->label(false) ?>
 
         <?= $form->field($model, 'address_id', [
-                'template' => '{input}{error}', // убираем label
+                'template' => '{input}{error}',
         ])->dropDownList(
                 $addresses,
                 [
@@ -48,7 +48,6 @@ $this->title = "Restoran tahrirlash";
                     dark:bg-[#2c2c2c] dark:text-gray-300  cursor-pointer',
                 ]
         ); ?>
-
 
 
 
@@ -64,8 +63,8 @@ $this->title = "Restoran tahrirlash";
                     Rasmni tanlang yoki bu yerga tortib tashlang
                 </p>
 
-                <?= $form->field($model, 'image', [
-                        'template' => '{input}{error}',
+                <?= $form->field($model, 'imageFile', [
+
                 ])->fileInput([
                         'id' => 'image-input',
                         'class' => 'absolute inset-0 opacity-0 cursor-pointer',
@@ -73,15 +72,17 @@ $this->title = "Restoran tahrirlash";
                 ])->label(false) ?>
             </div>
 
-            <!-- Предпросмотр -->
-            <div id="image-preview" class="hidden mt-3">
-                <img src="" alt="Image Preview"
+
+            <div id="image-preview" class="<?= empty($model->image) ? 'hidden' : '' ?> mt-3">
+                <img src="<?= !empty($model->image) ? Yii::getAlias('@web').'/image/'.$model->image : '' ?>" alt="Image Preview"
                      class="w-full h-48 object-cover rounded-lg border dark:border-gray-700 shadow-sm" />
             </div>
+
         </div>
 
 
         <?= $form->field($model, 'description')->textarea([
+
                 'rows' => 4,
                 'class' => 'w-full px-4 py-2 rounded-md border border-gray-300 dark:border-gray-700 
                 focus:outline-none focus:ring-2 focus:ring-yellow-400 
@@ -89,7 +90,7 @@ $this->title = "Restoran tahrirlash";
                 'placeholder' => 'Restoran tavsifi...',
         ])->label(false) ?>
 
-        <?= $form->field($model, 'user_id')->hiddenInput(['value' => Yii::$app->session->get('user_id')])->label(false) ?>
+
 
         <div class="flex items-center justify-between">
             <?= Html::submitButton('Saqlash', [

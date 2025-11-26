@@ -2,7 +2,7 @@
 
 namespace frontend\controllers;
 
-use frontend\models\UsersModel;
+use frontend\models\UserModel;
 use Yii;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
@@ -58,11 +58,11 @@ class AuthController extends Controller
             return $this->redirect(['restarans/index']);
         }
 
-        $model = new UsersModel();
-        $model->scenario = UsersModel::SCENARIO_LOGIN;
+        $model = new UserModel();
+        $model->scenario = UserModel::SCENARIO_LOGIN;
 
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            $user = UsersModel::findByEmail($model->email);
+            $user = UserModel::findByEmail($model->email);
 
             if ($user && $user->validatePassword($model->password)) {
 
@@ -99,8 +99,8 @@ class AuthController extends Controller
             return $this->redirect(['restaran/index']);
         }
 
-        $signupModel = new UsersModel();
-        $signupModel->scenario = UsersModel::SCENARIO_REGISTER;
+        $signupModel = new UserModel();
+        $signupModel->scenario = UserModel::SCENARIO_REGISTER;
 
         if ($signupModel->load(Yii::$app->request->post()) && $signupModel->validate()) {
             if ($signupModel->save()) {

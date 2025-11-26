@@ -3,7 +3,7 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
-/* @var $model frontend\models\UsersModel */
+/* @var $model frontend\models\UserModel */
 
 $this->title = 'krish';
 ?>

@@ -16,7 +16,9 @@
     "require": {
         "php": ">=7.4.0",
         "yiisoft/yii2": "~2.0.45",
-        "yiisoft/yii2-symfonymailer": "~2.0.3"
+        "yiisoft/yii2-symfonymailer": "~2.0.3",
+        "codemix/yii2-localeurls": "^1.8",
+        "mdmsoft/yii2-admin": "~2.0"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "^2.1",

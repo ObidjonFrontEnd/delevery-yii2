@@ -1,27 +1,52 @@
 <?php
 
-/** @var yii\web\View $this */
-/** @var string $name */
-/** @var string $message */
-/** @var Exception $exception*/
+    /** @var yii\web\View $this */
+    /** @var string $name */
+    /** @var string $message */
+    /** @var Exception $exception*/
 
-use yii\helpers\Html;
+    use yii\helpers\Html;
 
-$this->title = $name;
+    $this->title = $name;
 ?>
-<div class="site-error">
 
-    <h1><?= Html::encode($this->title) ?></h1>
 
-    <div class="alert alert-danger">
-        <?= nl2br(Html::encode($message)) ?>
+<div class="d-flex flex-column flex-root" id="kt_app_root">
+    <!--begin::Page bg image-->
+    <style>body { background-image: url('<?=Yii::getAlias('@web')?>/template/assets/media/auth/bg1.jpg'); }
+        [data-bs-theme="dark"] body { background-image: url('<?=Yii::getAlias('@web')?>/template/assets/media/auth/bg1-dark.jpg'); }</style>
+    <!--end::Page bg image-->
+    <!--begin::Authentication - Signup Welcome Message -->
+    <div class="d-flex flex-column flex-center flex-column-fluid">
+        <!--begin::Content-->
+        <div class="d-flex flex-column flex-center text-center p-10">
+            <!--begin::Wrapper-->
+            <div class="card card-flush w-lg-650px py-5">
+                <div class="card-body py-15 py-lg-20">
+                    <!--begin::Title-->
+                    <h1 class="fw-bolder fs-2hx text-gray-900 mb-4"><?=(Yii::t('app' , 'Oops!'))?></h1>
+                    <!--end::Title-->
+                    <!--begin::Text-->
+                    <div class="fw-semibold fs-6 text-gray-500 mb-7"><?=(Yii::t('app',"We can't find that page."))?></div>
+                    <!--end::Text-->
+                    <!--begin::Illustration-->
+                    <div class="mb-3">
+                        <img src="<?=Yii::getAlias('@web')?>/template/assets/media/auth/404-error.png" class="mw-100 mh-300px theme-light-show" alt="" />
+                        <img src="<?=Yii::getAlias('@web')?>/template/assets/media/auth/404-error-dark.png" class="mw-100 mh-300px theme-dark-show" alt="" />
+                    </div>
+                    <!--end::Illustration-->
+                    <!--begin::Link-->
+                    <div class="mb-0">
+
+                        <?= Html::a( Yii::t('app','Return Home'), ['site/index'] ,
+                                ['class' => 'btn btn-sm btn-primary']);?>
+                    </div>
+                    <!--end::Link-->
+                </div>
+            </div>
+            <!--end::Wrapper-->
+        </div>
+        <!--end::Content-->
     </div>
-
-    <p>
-        The above error occurred while the Web server was processing your request.
-    </p>
-    <p>
-        Please contact us if you think this is a server error. Thank you.
-    </p>
-
+    <!--end::Authentication - Signup Welcome Message-->
 </div>

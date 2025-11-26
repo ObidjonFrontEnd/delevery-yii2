@@ -12,17 +12,17 @@ return [
     'bootstrap' => ['log'],
     'controllerNamespace' => 'frontend\controllers',
     'defaultRoute' => 'restaran/index',
-    'language' => 'uz-UZ',
+
     'components' => [
         'formatter' => [
             'class' => 'yii\i18n\Formatter',
-            'locale' => 'uz-UZ',
+            'locale' => 'en-EN',
         ],
         'request' => [
             'csrfParam' => '_csrf-frontend',
         ],
         'user' => [
-            'identityClass' => 'frontend\models\UsersModel',
+            'identityClass' => 'frontend\models\UserModel',
             'enableAutoLogin' => true,
             'loginUrl' => ['auth/login'],
             'identityCookie' => ['name' => '_identity-frontend', 'httpOnly' => true],
@@ -46,8 +46,10 @@ return [
             'errorAction' => 'site/error',
         ],
 
-
         'urlManager' => [
+            'class' => 'codemix\localeurls\UrlManager',
+            'languages' => ['ru', 'en', 'uz'],
+
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [

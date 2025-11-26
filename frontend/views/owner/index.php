@@ -1,5 +1,5 @@
 <?php
-/** @var \frontend\models\UsersModel $restarans */
+/** @var \frontend\models\UserModel $restarans */
 /** @var \frontend\controllers\RestaranController $pagination */
 $this->title = 'Restaranlarim';
 ?>

@@ -97,7 +97,7 @@ $this->title = 'product qoshish';
                         Rasmni tanlang yoki bu yerga tortib tashlang
                     </p>
 
-                    <?= $form->field($product, 'image', [
+                    <?= $form->field($product, 'imageFile', [
                             'template' => '{input}{error}',
                     ])->fileInput([
                             'id' => 'image-input',
@@ -107,8 +107,9 @@ $this->title = 'product qoshish';
                 </div>
 
                 <!-- Preview -->
-                <div id="image-preview" class="hidden mt-3">
-                    <img src="" alt="Image Preview"
+
+                <div id="image-preview" class="<?= empty($product->image) ? 'hidden' : '' ?> mt-3">
+                    <img src="<?= !empty($product->image) ? Yii::getAlias('@web').'/image/'.$product->image : '' ?>" alt="Image Preview"
                          class="w-full h-48 object-cover rounded-lg border dark:border-gray-700 shadow-sm" />
                 </div>
             </div>

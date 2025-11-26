@@ -151,7 +151,9 @@ use yii\helpers\Html;
         </div>
 
 
+
         <div class="flex gap-[15px] items-center">
+
             <label class="toggle toggle-xl text-base-content border-[1px] border-gray-400">
                 <input type="checkbox" id="theme-toggle" <?= $isDark ? 'checked="checked"' : '' ?> />
                 <i class='bxr bxs-sun bg-white dark:bg-transparent dark:text-white rounded-md text-black'></i>
@@ -231,6 +233,7 @@ use yii\helpers\Html;
         <?= $content ?>
     </div>
 </main>
+<script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
 
 <?php $this->endBody() ?>
 

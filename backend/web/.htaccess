@@ -1,0 +1,21 @@
+<IfModule mod_rewrite.c>
+    Options +FollowSymLinks
+    IndexIgnore */*
+
+    RewriteEngine On
+
+    # Базовая директория (если Yii2 установлен не в корне сайта — укажи путь)
+    RewriteBase /
+
+    # Если запрошен существующий файл или директория — не переписывать
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+
+    # Перенаправляем всё на index.php
+    RewriteRule ^ index.php [L]
+</IfModule>
+
+# Если mod_rewrite отключён — fallback
+<IfModule !mod_rewrite.c>
+    ErrorDocument 404 /index.php
+</IfModule>

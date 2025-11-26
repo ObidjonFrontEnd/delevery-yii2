@@ -123,7 +123,7 @@ class Order extends \yii\db\ActiveRecord
      */
     public function getUser()
     {
-        return $this->hasOne(UsersModel::class, ['id' => 'user_id']);
+        return $this->hasOne(UserModel::class, ['id' => 'user_id']);
     }
 
 }

@@ -10,7 +10,7 @@ use frontend\models\ProductsModel;
 use frontend\models\ProductTagsModel;
 use frontend\models\RestauransModel;
 use frontend\models\TagsModel;
-use frontend\models\UsersModel;
+use frontend\models\UserModel;
 use Yii;
 use yii\data\Pagination;
 use yii\filters\AccessControl;
@@ -49,7 +49,7 @@ class OwnerController extends Controller
     public function actionIndex()
     {
         $userID = Yii::$app->user->id;
-        $restaurants = UsersModel::findOne($userID);
+        $restaurants = UserModel::findOne($userID);
         $query = $restaurants->getRestaurants();
         $count = $query->count();
         $pagination = new Pagination(['totalCount' => $count , 'pageSize' => 8]);
@@ -59,21 +59,24 @@ class OwnerController extends Controller
     }
 
     public function actionAdd(){
-        $insert = new RestauransModel();
+        $model = new RestauransModel();
         $addresses = ArrayHelper::map(
-            AddressesModel::findAll(['user_id' => Yii::$app->session->get('user_id')]),
+            AddressesModel::findAll(['user_id' => Yii::$app->user->getId()]),
             'id',
             'name'
         );
 
+        if($model->load(Yii::$app->request->post()) ){
+            $model->uploadImage();
+            $model->user_id = Yii::$app->user->getId();
 
-        if($insert->load(Yii::$app->request->post()) && $insert->validate()){
-            if($insert->save()){
-                return $this->redirect(['owner/index']);
+
+            if ($model->save(false)) {
+                return $this->redirect(['restaran/view', 'id' => $model->id]);
             }
         }
 
-        return $this->render('add' , [ 'model' => $insert , 'addresses' => $addresses ]);
+        return $this->render('add' , [ 'model' => $model , 'addresses' => $addresses ]);
     }
 
 
@@ -85,18 +88,22 @@ class OwnerController extends Controller
 
 
     public function actionEdit($id){
-        $restaurants = RestauransModel::findOne($id);
+        $model = RestauransModel::findOne($id);
         $addresses = ArrayHelper::map(
-            AddressesModel::findAll(['user_id' => Yii::$app->session->get('user_id')]),
+            AddressesModel::findAll(['user_id' => Yii::$app->user->getId()]),
             'id',
             'name'
         );
-        if($restaurants->load(Yii::$app->request->post()) && $restaurants->validate()){
-            if($restaurants->save()){
-                return $this->redirect(['owner/index']);
+        if($model->load(Yii::$app->request->post()) ){
+            $model->uploadImage();
+            $model->user_id = Yii::$app->user->getId();
+
+
+            if ($model->save(false)) {
+                return $this->redirect(['restaran/view', 'id' => $model->id]);
             }
         }
-        return $this->render('edit' , [ 'model' => $restaurants , 'addresses' => $addresses ]);
+        return $this->render('edit' , [ 'model' => $model , 'addresses' => $addresses ]);
     }
 
     public function actionAddProduct(){
@@ -105,175 +112,136 @@ class OwnerController extends Controller
         $productTagModel = new ProductTagsModel();
         $productDetailsModel = new ProductDetailModel();
 
-        $restaurants = RestauransModel::find()
-            ->where(['user_id' => $userID])
-            ->all();
-
-        $categories = ArrayHelper::map(
-            CategoriesModel::find()->all(),
-            'id',
-            'name'
-        );
-
-        $tags = ArrayHelper::map(
-            TagsModel::find()->all(),
-            'id',
-            'name'
-        );
-
-        $restaurantList = ArrayHelper::map($restaurants,
-            'id',
-            'title'
-        );
+        $restaurants = RestauransModel::find()->where(['user_id' => $userID])->all();
+        $categories = ArrayHelper::map(CategoriesModel::find()->all(), 'id', 'name');
+        $tags = ArrayHelper::map(TagsModel::find()->all(), 'id', 'name');
+        $restaurantList = ArrayHelper::map($restaurants, 'id', 'title');
 
         $selectedTags = [];
 
-
-            if (Yii::$app->request->isPost) {
+        if (Yii::$app->request->isPost) {
             $transaction = Yii::$app->db->beginTransaction();
 
             try {
+                if ($productModel->load(Yii::$app->request->post())) {
 
-                $productModel->load(Yii::$app->request->post());
+                    // Загрузка изображения (заполняет поле image, но не сохраняет)
+                    $productModel->uploadImage();
 
-                if ($productModel->validate() && $productModel->save()) {
+                    // Валидация и сохранение продукта
+                    if ($productModel->save(false)) {
 
+                        // Сохранение деталей продукта
+                        $productDetailsModel->load(Yii::$app->request->post());
+                        $productDetailsModel->product_id = $productModel->id;
 
-                    $productDetailsModel->load(Yii::$app->request->post());
-                    $productDetailsModel->product_id = $productModel->id;
-
-
-//                    if (!$productDetailsModel->validate()) {
-//                        var_dump($productDetailsModel->errors);
-//                        die();
-//                    }
-
-                    if (!$productDetailsModel->save()) {
-                        throw new \Exception('Failed to save product details');
-                    }
-
-
-                    $selectedTags = Yii::$app->request->post('tags', []);
-                    foreach ($selectedTags as $tagId) {
-                        $productTag = new ProductTagsModel();
-                        $productTag->product_id = $productModel->id;
-                        $productTag->tag_id = $tagId;
-                        if (!$productTag->save()) {
-                            throw new \Exception('Failed to save product tag');
+                        if (!$productDetailsModel->save()) {
+                            throw new \Exception('Failed to save product details');
                         }
+
+                        // Сохранение тегов
+                        $selectedTags = Yii::$app->request->post('tags', []);
+                        foreach ($selectedTags as $tagId) {
+                            $productTag = new ProductTagsModel();
+                            $productTag->product_id = $productModel->id;
+                            $productTag->tag_id = $tagId;
+                            if (!$productTag->save()) {
+                                throw new \Exception('Failed to save product tag');
+                            }
+                        }
+
+                        $transaction->commit();
+                        Yii::$app->session->setFlash('success', 'Mahsulot muvaffaqiyatli qo\'shildi!');
+                        return $this->redirect(['owner/index']);
+                    } else {
+                        // Вывод ошибок валидации
+                        throw new \Exception('Ошибки валидации: ' . json_encode($productModel->errors));
                     }
-
-                    $transaction->commit();
-//                    Yii::$app->session->setFlash('success', 'Mahsulot muvaffaqiyatli qo\'shildi!');
-                    return $this->redirect(['owner/index']);
-                } else {
-
-                    throw new \Exception('ошибки валидации продукта');
                 }
             } catch (\Exception $e) {
                 $transaction->rollBack();
-//                Yii::$app->session->setFlash('error', 'Xatolik yuz berdi: ' . $e->getMessage());
+                Yii::$app->session->setFlash('error', 'Xatolik yuz berdi: ' . $e->getMessage());
             }
         }
 
-            return $this->render('productcontrol', [
-                'product' => $productModel,
-                'productTag' => $productTagModel,
-                'productDetails' => $productDetailsModel,
-                'restaurantList' => $restaurantList,
-                'categories' => $categories,
-                'tags' => $tags,
-                'title'=>"Mahsulot qo'shish",
-                'selectedTags'=>$selectedTags,
-
-            ]);
+        return $this->render('productcontrol', [
+            'product' => $productModel,
+            'productTag' => $productTagModel,
+            'productDetails' => $productDetailsModel,
+            'restaurantList' => $restaurantList,
+            'categories' => $categories,
+            'tags' => $tags,
+            'title' => "Mahsulot qo'shish",
+            'selectedTags' => $selectedTags,
+        ]);
     }
 
 
     public function actionEditProduct($id)
     {
-
-        $productModel = ProductsModel::findOne(['id' => $id]);
         $userID = Yii::$app->user->id;
 
+        $productModel = ProductsModel::findOne(['id' => $id]);
         if (!$productModel) {
             throw new \yii\web\NotFoundHttpException('Mahsulot topilmadi');
         }
 
-        // Загружаем существующие детали продукта или создаём новые
         $productDetailsModel = ProductDetailModel::findOne(['product_id' => $id]);
         if (!$productDetailsModel) {
             $productDetailsModel = new ProductDetailModel();
             $productDetailsModel->product_id = $id;
         }
 
-
         $existingTags = ProductTagsModel::find()
             ->where(['product_id' => $id])
             ->select('tag_id')
             ->column();
 
-
         $restaurants = RestauransModel::find()
             ->where(['user_id' => $userID])
             ->all();
 
-
-        $categories = ArrayHelper::map(
-            CategoriesModel::find()->all(),
-            'id',
-            'name'
-        );
-
-        $tags = ArrayHelper::map(
-            TagsModel::find()->all(),
-            'id',
-            'name'
-        );
-
-        $restaurantList = ArrayHelper::map($restaurants, 'id', 'title');
-
+        $categories = ArrayHelper::map(CategoriesModel::find()->all(),'id','name');
+        $tags = ArrayHelper::map(TagsModel::find()->all(),'id','name');
+        $restaurantList = ArrayHelper::map($restaurants,'id','title');
 
         if (Yii::$app->request->isPost) {
             $transaction = Yii::$app->db->beginTransaction();
 
             try {
+                if ($productModel->load(Yii::$app->request->post())) {
 
-                $productModel->load(Yii::$app->request->post());
+                    // Загрузка нового изображения если пользователь выбрал другой файл
+                    $productModel->uploadImage();
 
-                if ($productModel->validate() && $productModel->save()) {
+                    if ($productModel->save(false)) {
 
+                        $productDetailsModel->load(Yii::$app->request->post());
+                        $productDetailsModel->product_id = $productModel->id;
 
-                    $productDetailsModel->load(Yii::$app->request->post());
-                    $productDetailsModel->product_id = $productModel->id;
-
-                    if (!$productDetailsModel->save()) {
-                        throw new \Exception('Failed to save product details: ' . json_encode($productDetailsModel->errors));
-                    }
-
-                    // ВАЖНО: Удаляем старые связи с тегами
-                    ProductTagsModel::deleteAll(['product_id' => $productModel->id]);
-
-                    // Добавляем новые теги
-                    $selectedTags = Yii::$app->request->post('tags', []);
-                    foreach ($selectedTags as $tagId) {
-                        $productTag = new ProductTagsModel();
-                        $productTag->product_id = $productModel->id;
-                        $productTag->tag_id = $tagId;
-
-                        if (!$productTag->save()) {
-                            throw new \Exception('Failed to save product tag: ' . json_encode($productTag->errors));
+                        if (!$productDetailsModel->save()) {
+                            throw new \Exception('Failed to save product details');
                         }
+
+                        ProductTagsModel::deleteAll(['product_id' => $productModel->id]);
+
+                        $selectedTags = Yii::$app->request->post('tags', []);
+                        foreach ($selectedTags as $tagId) {
+                            $productTag = new ProductTagsModel();
+                            $productTag->product_id = $productModel->id;
+                            $productTag->tag_id = $tagId;
+                            if (!$productTag->save()) {
+                                throw new \Exception('Failed to save product tag');
+                            }
+                        }
+
+                        $transaction->commit();
+                        Yii::$app->session->setFlash('success', 'Mahsulot muvaffaqiyatli yangilandi!');
+                        return $this->redirect(['owner/index']);
+                    } else {
+                        throw new \Exception('Ошибки валидации: ' . json_encode($productModel->errors));
                     }
-
-                    $transaction->commit();
-                    Yii::$app->session->setFlash('success', 'Mahsulot muvaffaqiyatli yangilandi!');
-                    return $this->redirect(['owner/index']);
-
-                } else {
-                    throw new \Exception('Валидация не прошла: ' . json_encode($productModel->errors));
                 }
-
             } catch (\Exception $e) {
                 $transaction->rollBack();
                 Yii::$app->session->setFlash('error', 'Xatolik: ' . $e->getMessage());
@@ -281,16 +249,17 @@ class OwnerController extends Controller
         }
 
         return $this->render('productcontrol', [
-            'title'=>"Mahsulot tahrirlash",
+            'title' => "Mahsulot tahrirlash",
             'product' => $productModel,
             'productDetails' => $productDetailsModel,
             'restaurantList' => $restaurantList,
             'categories' => $categories,
             'tags' => $tags,
             'selectedTags' => $existingTags,
-            '$user_id'=>$userID,
+            'user_id' => $userID,
         ]);
     }
+
 
     public function actionDeleteProduct($id){
         $productModel = ProductsModel::findOne(['id' => $id]);
